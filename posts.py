@@ -16,11 +16,24 @@ def open_connection():
 #        logger.error("ERROR: Could not connect to database.")
         sys.exit()
 
-def get_records(cpt):
+def get_records():
+    sql = """
+    SELECT DISTINCT
+    wp_posts.post_date as Date,
+    wp_posts.post_title as Title,
+    wp_posts.post_content as Content,
+    (SELECT GROUP_CONCAT(wp_terms.name) from wp_term_relationships
+    LEFT JOIN wp_term_taxonomy ON(wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id)
+    LEFT JOIN wp_terms ON(wp_term_taxonomy.term_id = wp_terms.term_id)
+    WHERE wp_posts.ID = wp_term_relationships.object_id AND wp_term_taxonomy.taxonomy = 'category') as Category
+    FROM wp_posts
+    WHERE wp_posts.post_status = 'publish'
+    AND wp_posts.post_type = 'post'
+    ORDER BY wp_posts.post_date DESC;
+    """
     try:
         open_connection()
         with conn.cursor() as cur:
-            sql = "SELECT post_date, post_title, post_content FROM wp_posts WHERE post_type = '{}'".format(cpt)
             cur.execute(sql)
             results = cur.fetchall()
             cur.close()
@@ -30,7 +43,7 @@ def get_records(cpt):
     finally:
         print ("Query successful.")
         header = ['date', 'title', 'content']
-        with open('{}.csv'.format(cpt), 'wt') as f:
+        with open('posts-with-cats.csv', 'wt') as f:
             csv_writer = csv.writer(f)
             csv_writer.writerow(header)
             for result in results:
@@ -38,9 +51,7 @@ def get_records(cpt):
 
 
 def main():
-    cpts = ['training', 'resource', 'report', 'chapter', 'event', 'course', 'staff-resource', 'post', 'page']
-    for cpt in cpts:
-        get_records(cpt)
+    get_records()
 
 if __name__ == '__main__':
     main()
