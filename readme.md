@@ -7,8 +7,11 @@ Quick & dirty script.
 Usage
 -----
 1. Clone this repo
-2. `cd` into directory and run `pip install -r requirements.txt`
-3. `source` the virtual environment activation script - e.g. `source venv/bin/activate`
+2. `cd` into the project directory
+3. Make a virtual environment: `virtualenv -p python3 venv`
+4. `source` the virtual environment activation script - e.g. `source venv/bin/activate`
+5. Run `pip install -r requirements.txt`
+6. Add a `config.py` file in project root with database connection credentials in a `mysql` list
 
 References
 ----------
