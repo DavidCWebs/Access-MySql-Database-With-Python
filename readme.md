@@ -12,6 +12,7 @@ Usage
 4. `source` the virtual environment activation script - e.g. `source venv/bin/activate`
 5. Run `pip install -r requirements.txt`
 6. Add a `config.py` file in project root with database connection credentials in a `mysql` list
+7. `cp sample-config.py config.py` and amend values
 
 References
 ----------

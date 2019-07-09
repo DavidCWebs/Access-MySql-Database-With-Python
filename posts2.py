@@ -17,6 +17,7 @@ def open_connection():
         sys.exit()
 
 def get_records():
+    # Get post data, including associated categories.
     sql = """
     SELECT post_date, post_title, post_content,
     (SELECT GROUP_CONCAT(wp_terms.name) FROM wp_term_relationships
